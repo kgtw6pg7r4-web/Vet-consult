@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Veterinary Consult v18 Stable</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#eef2f6;color:#222}
+.app{display:grid;grid-template-columns:60% 40%;gap:12px;height:100%;padding:10px;box-sizing:border-box}
+.panel{display:flex;flex-direction:column;background:#fff;border-radius:14px;box-shadow:0 3px 10px rgba(0,0,0,.08);min-height:0}
+.header{padding:10px 14px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:700;color:#1976d2}
+.body{padding:12px;overflow:auto;flex:1}
+.top{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+h3{margin:8px 0 4px;font-size:15px;color:#1976d2}
+label{display:block;font-size:11px;color:#666;font-weight:700;margin-bottom:3px}
+.grid{display:grid;grid-template-columns:2.2fr .9fr 2fr .9fr .8fr .8fr .8fr;gap:6px}
+.pe,.pe2{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+input,select,textarea{width:100%;box-sizing:border-box;padding:6px 8px;font-size:13px;border:1px solid #d2d7dd;border-radius:8px}
+textarea{resize:none;overflow:hidden}
+.small{min-height:48px}.med{min-height:72px}.large{min-height:110px}
+.actions{display:flex;gap:8px}.btn{border:none;border-radius:8px;padding:9px 14px;font-weight:700;cursor:pointer}
+.copy{background:#43a047;color:#fff}.new{background:#eceff1}
+pre{white-space:pre-wrap;font-size:14px;line-height:1.45;margin:0}
+.status{font-size:12px;color:#43a047}
+@media(max-width:1000px){html,body{overflow:auto}.app{grid-template-columns:1fr;height:auto}.grid,.pe,.pe2{grid-template-columns:repeat(2,1fr)}}
+</style></head><body>
+<div class="app">
+<div class="panel">
+<div class="header">🩺 Veterinary Consult <span class="status">● Live</span></div>
+<div class="body">
+<div class="top">
+<span style="font-size:13px">Consult</span>
+<select id="greet" style="width:72px"><option>ครับ</option><option>ค่ะ</option></select>
+<span>|</span>🗓️<input id="date" type="date" style="width:145px">
+</div>
+
+<h3>Signalment</h3>
+<div class="grid">
+<div><label>Name</label><input id="petName"></div>
+<div><label>Sp.</label><select id="sp"><option>🐶 Dog</option><option>🐱 Cat</option></select></div>
+<div><label>Breed</label><input id="breed"></div>
+<div><label>Sex</label><select id="sex"><option>MI</option><option>MN</option><option>FI</option><option>FN</option></select></div>
+<div><label>Age</label><input id="age"></div>
+<div><label>BW</label><input id="bw"></div>
+<div><label>BCS</label><input id="bcs"></div>
+</div>
+
+<h3>Case Summary</h3>
+<textarea id="summary" class="large"></textarea>
+
+<h3>Physical Examination</h3>
+<div class="pe">
+<div><label>Behavior</label><select id="behavior"><option>BAR</option><option>QAR</option><option>Depressed</option><option>Obtunded</option><option>Stuporous</option><option>Comatose</option></select></div>
+<div><label>Temp °F</label><input id="temp"></div>
+<div><label>HR</label><input id="hr"></div>
+<div><label>RR</label><input id="rr"></div>
+<div><label>Pulse</label><select id="pulse"><option>Normal</option><option>Strong</option><option>Weak (Thready)</option><option>Bounding</option><option>Pulse Deficit</option><option>Absent</option></select></div>
+</div>
+<div class="pe2">
+<div><label>HS</label><select id="hs"><option>Normal</option><option>Murmur</option><option>Gallop</option><option>Arrhythmia</option><option>Muffled</option><option>Other</option></select></div>
+<div><label>LS</label><select id="ls"><option>Normal</option><option>Increased</option><option>Decreased</option><option>Crackles</option><option>Wheezes</option><option>Harsh</option><option>Stertor</option><option>Stridor</option></select></div>
+<div><label>MM</label><select id="mm"><option>Pink</option><option>Pale Pink</option><option>White</option><option>Hyperemic</option><option>Injected</option><option>Brick Red</option><option>Cyanotic</option><option>Icteric</option></select></div>
+<div><label>CRT</label><select id="crt"><option>&lt;1 sec</option><option>1–2 sec</option><option>2–3 sec</option><option>&gt;3 sec</option></select></div>
+<div><label>Hydration</label><select id="hyd"><option>Normal</option><option>Mild (5%)</option><option>Moderate (7–8%)</option><option>Severe (10–12%)</option></select></div>
+</div>
+
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start;">
+<div><h3>Additional PE</h3><textarea id="ape" class="small"></textarea></div>
+<div><h3>Diagnostics</h3><textarea id="diag" class="med" placeholder="CBC:
+Chem:
+UA:
+XR:
+US:
+Other:"></textarea></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+<div><h3>Assessment / DDx</h3><textarea id="ass" class="small"></textarea>
+</div><div><h3>Treatment / Plan</h3><textarea id="plan" class="small"></textarea>
+</div></div><h3>Question</h3><textarea id="q" class="small"></textarea>
+</div></div>
+
+<div class="panel">
+<div class="header"><span>📄 Consult Preview</span><div class="actions"><button class="btn copy" onclick="copyOut()">📋 Copy</button><button class="btn new" onclick="newCase()">🆕 New</button></div></div>
+<div class="body"><pre id="out"></pre></div>
+</div></div>
+
+<script>
+date.valueAsDate=new Date();
+const $=id=>document.getElementById(id);
+const v=id=>$(id).value;
+function grow(t){t.style.height='auto';t.style.height=t.scrollHeight+'px';}
+function thai(){let p=v('date').split('-');return p.length==3?`${p[2]}/${p[1]}/${+p[0]+543}`:'';}
+function sec(t,x){x=x.trim();return x?`\n${t}\n${x}`:'';}
+function render(){
+const pe=`Behavior: ${v('behavior')}
+Temp: ${v('temp')} °F
+HR: ${v('hr')} bpm
+RR: ${v('rr')} /min
+Pulse: ${v('pulse')}
+HS: ${v('hs')}
+LS: ${v('ls')}
+MM: ${v('mm')}
+CRT: ${v('crt')}
+Hydration: ${v('hyd')}`;
+out.textContent=`ขออนุญาต consult ${v('greet')}
+
+วันที่: ${thai()}
+
+Signalment
+${v('petName')} | ${v('sp')} | ${v('breed')} | ${v('sex')} | ${v('age')} | BW ${v('bw')} kg | BCS ${v('bcs')}
+
+Case Summary
+${v('summary').trim()}
+
+Physical Examination
+${pe}`+
+sec("Additional PE",v('ape'))+
+sec("Diagnostics",v('diag'))+
+sec("Assessment / DDx",v('ass'))+
+sec("Treatment / Plan",v('plan'))+
+sec("Question",v('q'));
+}
+document.querySelectorAll("input,select,textarea").forEach(e=>{
+ if(e.tagName=="TEXTAREA")grow(e);
+ e.oninput=()=>{if(e.tagName=="TEXTAREA")grow(e);render();};
+ e.onchange=render;
+});
+function copyOut(){navigator.clipboard.writeText(out.textContent);let b=document.querySelector(".copy");b.textContent="✅ Copied";setTimeout(()=>b.textContent="📋 Copy",1200);}
+function newCase(){if(!confirm("เริ่ม Consult ใหม่?"))return;document.querySelectorAll("input:not(#date),textarea").forEach(e=>e.value="");document.querySelectorAll("select").forEach(s=>s.selectedIndex=0);date.valueAsDate=new Date();document.querySelectorAll("textarea").forEach(grow);render();}
+render();
+</script></body></html>
